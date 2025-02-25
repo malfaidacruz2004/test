@@ -20,7 +20,14 @@ def encriptarIdioma(idioma):
     lengua = idioma
     idiomaEncrip = hashlib.sha1(lengua.encode('utf-8'))
     return idiomaEncrip.hexdigest()
-    
+
+def generarArchivos(df):
+    con = sqlite3.connect('datos.bd')
+    df.to_sql('datos',con, if_exists='replace', index=False)
+    print('Datos enviados a la Base de datos Sqlite')
+
+    df.to_json('data.json', orient= 'split')
+    print('Archivo data.json creado')
 
 def generarTabla():
     datos= obtener_datos()
@@ -53,12 +60,7 @@ def generarTabla():
     tiempo_Maximo= df['Time'].max()
     print('Tiempo maximo:',tiempo_Maximo)
 
-    con = sqlite3.connect('datos.bd')
-    df.to_sql('datos',con, if_exists='replace', index=False)
-    print('Datos enviados a la Base de datos Sqlite')
-
-    df.to_json('data.json', orient= 'split')
-    print('Archivo data.json creado')
+    generarArchivos(df)
 
 
 if __name__ == "__main__":
